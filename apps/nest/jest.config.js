@@ -8,6 +8,7 @@ module.exports = {
     '<rootDir>/src/**/*.(t|j)s',
     '!<rootDir>/src/main.ts',
     '!<rootDir>/src/app.module.ts',
+    '!<rootDir>/src/**/author.dto.ts',
   ],
   testEnvironment: 'node',
   moduleNameMapper: {
