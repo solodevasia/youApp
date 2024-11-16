@@ -4,6 +4,7 @@ import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { JwtModule } from '@nestjs/jwt';
 import fs from 'fs';
 import { join } from 'path';
+import { ServeStaticModule } from '@nestjs/serve-static';
 
 export const typeormConfiguration = {
   type: process.env.type as any,
@@ -24,6 +25,10 @@ export const typeormConfiguration = {
       global: true,
       secret: fs.readFileSync(join(__dirname, '../jwtRS256.key')),
       signOptions: { expiresIn: '60s' },
+    }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '../src/assets'),
+      serveRoot: '/assets',
     }),
   ],
   controllers: [],

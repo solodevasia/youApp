@@ -1,0 +1,77 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+.bg-publish {
+  height: 100vh;
+  background: radial-gradient(
+    121.73% 121.49% at 100% -3.39%,
+    #1f4247 0%,
+    #0d1d23 56.18%,
+    #09141a 100%
+  );
+}
+
+.bg-internal {
+  height: 100vh;
+  background-color: rgba(9, 20, 26, 1);
+}
+
+.primary {
+  background: linear-gradient(108.32deg, #62cdcb 24.88%, #4599db 78.49%);
+}
+
+.disabled {
+  background: linear-gradient(108.32deg, #62cdcb 24.88%, #4599db 78.49%);
+  div {
+    background-color: rgb(33 33 33 / 61%);
+  }
+}
+
+.text-gold {
+  position: relative;
+  background: -webkit-linear-gradient(
+    74.08deg,
+    #94783e -6.8%,
+    #f3eda6 16.76%,
+    #f8fae5 30.5%,
+    #ffe2be 49.6%,
+    #d5be88 78.56%,
+    #f8fae5 89.01%,
+    #d5be88 100.43%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  cursor: pointer;
+}
+
+.text-gold:after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(
+    74.08deg,
+    #94783e -6.8%,
+    #f3eda6 16.76%,
+    #f8fae5 30.5%,
+    #ffe2be 49.6%,
+    #d5be88 78.56%,
+    #f8fae5 89.01%,
+    #d5be88 100.43%
+  );
+}
