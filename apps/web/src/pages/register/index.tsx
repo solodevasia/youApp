@@ -98,7 +98,7 @@ export default function Register() {
         <Input
           id="password-input__testid"
           name="password"
-          type="password"
+          type={visible ? "password" : "text"}
           classes="mb-6"
           placeholder="Create Password"
           value={state.password}
@@ -113,7 +113,7 @@ export default function Register() {
         <Input
           id="confirmation-input__testid"
           name="confirmation"
-          type="password"
+          type={visible ? "password" : "text"}
           classes={invalidPassword ? "" : "mb-8"}
           placeholder="Confirm Password"
           value={state.confirmation}

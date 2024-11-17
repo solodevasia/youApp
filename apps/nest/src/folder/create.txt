@@ -1,1 +1,1 @@
-{"id":37,"username":"Brenna92","email":"Kellen63@yahoo.com","password":"$2b$10$ub1a6j6dlGxODMm5gKkzYODYP7C0aaoLt6OAUnLqXyowAiSRvadSe","created_at":1731874945968,"updated_at":1731874945968}
+{"id":45,"username":"Amari.Auer60","email":"Elisa_Huel@yahoo.com","password":"$2b$10$4OYtU/jE33m00Un/akYAYehnzg82igk43drH8TmNpXLSXWQgQaf86","created_at":1731875128714,"updated_at":1731875128714}
