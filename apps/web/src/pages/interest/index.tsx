@@ -36,13 +36,15 @@ export default function Interest() {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     }).then(async (res) => {
       const data = await res.json();
-      setState(() => [
-        ...data.author?.interest
-          ?.split("#")
-          ?.filter((item: string) => item)
-          ?.map((item: string) => item),
-        null,
-      ]);
+      if (data.author?.interest) {
+        setState(() => [
+          ...data.author?.interest
+            ?.split("#")
+            ?.filter((item: string) => item)
+            ?.map((item: string) => item),
+          null,
+        ]);
+      }
     });
   }, []);
 
@@ -96,7 +98,7 @@ export default function Interest() {
                   type="text"
                   className={`bg-transparent outline-none border-none text-white ${value ? "w-fit" : "w-20"}`}
                   value={value}
-                  autoFocus
+                  autoFocus={true}
                   onChange={onChange}
                   onKeyPress={(event) => {
                     if (event.key === "Enter") {

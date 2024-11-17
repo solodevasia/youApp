@@ -134,7 +134,7 @@ export default function Profile() {
         </div>
         {state.nickname ? (
           <span className="text-[14px] font-semibold text-white">
-            @{state.nickname}
+            {state.nickname ? `@${state.nickname}` : null}
           </span>
         ) : null}
         <Image src={elipsis} alt="elipsis" />
@@ -161,12 +161,16 @@ export default function Profile() {
         </div>
         <div className="absolute bottom-4 left-4">
           <div className="text-[16px] text-white font-bold">
-            @{state.nickname},{" "}
-            {moment(state.birthday).locale("id").from(new Date()).split(" ")[0]}
+            {state.nickname ? `@${state.nickname}` : null},
+            {state.birthday
+              ? moment(new Date()).locale("id").diff(state.birthday, "year")
+              : null}
           </div>
-          <div className="text-[13px] font-medium text-white my-1">
-            {state.gender}
-          </div>
+          {state.gender ? (
+            <div className="text-[13px] font-medium text-white my-1">
+              {state.gender}
+            </div>
+          ) : null}
           <div className="flex items-center">
             {typeof state.horoscope === "number" ? (
               <Chip
@@ -304,7 +308,7 @@ export default function Profile() {
                       Birthday:
                     </span>
                     <span className="text-[13px] text-white font-medium ml-2">
-                      {`${state.birthday.split("-").reverse().join(" / ")} (Age ${moment(state.birthday).locale("id").from(new Date()).split(" ")[0]})`}
+                      {`${state.birthday.split("-").reverse().join(" / ")} (Age ${moment(new Date()).locale("id").diff(state.birthday, "year")})`}
                     </span>
                   </div>
                 ) : null}
