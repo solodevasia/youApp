@@ -84,6 +84,14 @@ export default function Interest() {
               <div
                 key={index}
                 className="flex items-center bg-chip w-fit p-2 rounded-[5px] mr-2 mb-2"
+                onClick={() => {
+                  setState(
+                    () =>
+                      state.filter((item, i) => i !== index) as
+                        | string[]
+                        | null[]
+                  );
+                }}
               >
                 <span className="text-[12px] text-white font-semibold mr-4">
                   {item}
