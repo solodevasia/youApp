@@ -54,7 +54,6 @@ export default class UserService {
   }
 
   async login(body: LoginField) {
-    console.log(body);
     const findOne = await this.repository.findOne({
       where: [{ username: body.token }, { email: body.token }],
     });
@@ -135,16 +134,16 @@ export default class UserService {
         relations: { author: true },
       });
     }
-    findOne.author.gender = body.gender;
-    findOne.author.nickname = body.nickname;
-    findOne.author.birthday = body.birthday;
-    findOne.author.height = body.height;
-    findOne.author.weight = body.weight;
-    findOne.author.about = body.about;
-    findOne.author.interest = body.interest;
-    findOne.author.zodiac = Zodiac[body.zodiac];
-    findOne.author.horoscope = Zodiac[body.horoscope];
-    console.log(avatar, file);
+    findOne.author.gender = body.gender || findOne.author.gender;
+    findOne.author.nickname = body.nickname || findOne.author.nickname;
+    findOne.author.birthday = body.birthday || findOne.author.birthday;
+    findOne.author.height = body.height || findOne.author.height;
+    findOne.author.weight = body.weight || findOne.author.weight;
+    findOne.author.about = body.about || findOne.author.about;
+    findOne.author.interest = body.interest || findOne.author.interest;
+    findOne.author.zodiac = Zodiac[body.zodiac] || findOne.author.zodiac;
+    findOne.author.horoscope =
+      Zodiac[body.horoscope] || findOne.author.horoscope;
     if (avatar) {
       findOne.author.avatar = avatar;
     }

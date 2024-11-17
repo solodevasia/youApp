@@ -15,7 +15,7 @@ export const typeormConfiguration = {
   password: process.env.password,
   database: process.env.database,
   autoLoadEntities: true,
-  synchronize: true,
+  synchronize: false,
 } as TypeOrmModuleOptions;
 
 @Module({
@@ -25,7 +25,7 @@ export const typeormConfiguration = {
     JwtModule.register({
       global: true,
       secret: fs.readFileSync(join(__dirname, '../jwtRS256.key')),
-      signOptions: { expiresIn: '60s' },
+      signOptions: { expiresIn: '1000s' },
     }),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '../src/assets'),

@@ -81,7 +81,6 @@ export default class UserController {
     @Req() req: CustomRequest,
     @UploadedFile('file') file: Express.Multer.File,
   ) {
-    console.log(file, '<<<<>');
     return this.service.uploadAvatar(req.user.id, file);
   }
 }

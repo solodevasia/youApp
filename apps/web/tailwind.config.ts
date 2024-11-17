@@ -21,6 +21,8 @@ export default {
         box: "rgba(14, 25, 31, 1)",
         imageBackground: "rgba(255, 255, 255, 0.08)",
         input: "rgba(217, 217, 217, 0.06)",
+        chips: "rgba(217, 217, 217, 0.06)",
+        chip: "rgba(255, 255, 255, 0.1)",
       },
       borderColor: {
         input: "rgba(255, 255, 255, 0.22)",

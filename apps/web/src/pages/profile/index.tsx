@@ -13,8 +13,10 @@ import Select from "@youApp/shared/Select";
 import DateInput from "@youApp/shared/Date";
 import IconUpload from "@youApp/shared/IconUpload";
 import moment from "moment";
+import { useRouter } from "next/router";
 
 export default function Profile() {
+  const router = useRouter();
   const [files, setFile] = React.useState<any>();
   const [state, setState] = React.useState({
     avatar: "",
@@ -25,6 +27,7 @@ export default function Profile() {
     zodiac: "",
     height: "",
     weight: "",
+    interest: "",
   });
   const [zodiacData, setZodiac] = React.useState([]);
   const [aboutEdit, setAboutEdit] = React.useState(false);
@@ -129,14 +132,18 @@ export default function Profile() {
           />
           <span className="text-[14px] font-bold text-white ml-2">Back</span>
         </div>
-        <span className="text-[14px] font-semibold text-white">@Jhondoe</span>
+        {state.nickname ? (
+          <span className="text-[14px] font-semibold text-white">
+            @{state.nickname}
+          </span>
+        ) : null}
         <Image src={elipsis} alt="elipsis" />
       </div>
       <div className="w-full h-[190px] relative bg-background mt-6 rounded-[16px] flex items-start justify-end flex-col p-4 overflow-hidden">
         {state.avatar ? (
           <img
             src={
-              state.avatar.indexOf("avatar") > -1
+              state.avatar?.indexOf("avatar") > -1
                 ? `/assets${state.avatar}`
                 : state.avatar
             }
@@ -153,11 +160,27 @@ export default function Profile() {
           />
         </div>
         <div className="absolute bottom-4 left-4">
-          <div className="text-[16px] text-white font-bold">@johndoe, 28</div>
-          <div className="text-[13px] font-medium text-white my-1">Male</div>
+          <div className="text-[16px] text-white font-bold">
+            @{state.nickname},{" "}
+            {moment(state.birthday).locale("id").from(new Date()).split(" ")[0]}
+          </div>
+          <div className="text-[13px] font-medium text-white my-1">
+            {state.gender}
+          </div>
           <div className="flex items-center">
-            <Chip image={horoscope} text="Virgo" />
-            <Chip image={zodiac} text="Pig" classes="ml-2" />
+            {typeof state.horoscope === "number" ? (
+              <Chip
+                image={horoscope}
+                text={zodiacData[Number(state.horoscope)]}
+              />
+            ) : null}
+            {typeof state.zodiac === "number" ? (
+              <Chip
+                image={zodiac}
+                text={zodiacData[Number(state.zodiac)]}
+                classes="ml-2"
+              />
+            ) : null}
           </div>
         </div>
       </div>
@@ -174,7 +197,7 @@ export default function Profile() {
               id="add-avatar__testid"
               name="avatar"
               image={
-                state.avatar.indexOf("avatar") > -1
+                state.avatar?.indexOf("avatar") > -1
                   ? `/assets${state.avatar}`
                   : state.avatar
               }
@@ -334,11 +357,25 @@ export default function Profile() {
           </div>
         )}
       </Box>
-      <Box title="Interest" icon={Edit} classes="mt-6 pt-4 pl-6 pr-4">
-        <div className="py-4 w-[280px]">
-          <span className="text-[14px] font-medium text-info">
-            Add in your interest to find a better match
-          </span>
+      <Box
+        title="Interest"
+        icon={Edit}
+        onClick={() => router.push("/interest")}
+        classes="mt-6 pt-4 pl-6 pr-4"
+      >
+        <div className="pt-4 pb-0 w-[280px] flex items-center flex-wrap">
+          {state.interest ? (
+            state.interest
+              ?.split("#")
+              ?.filter((item) => item)
+              ?.map((item, index) => (
+                <Chip key={index} classes="w-fit mr-2 mb-3" text={item} />
+              ))
+          ) : (
+            <span className="text-[14px] font-medium text-info">
+              Add in your interest to find a better match
+            </span>
+          )}
         </div>
       </Box>
     </div>
