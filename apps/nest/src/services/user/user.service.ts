@@ -54,6 +54,7 @@ export default class UserService {
   }
 
   async login(body: LoginField) {
+    console.log(body);
     const findOne = await this.repository.findOne({
       where: [{ username: body.token }, { email: body.token }],
     });
@@ -89,6 +90,29 @@ export default class UserService {
     };
   }
 
+  async uploadAvatar(id: number, file: Express.Multer.File) {
+    let findOne = await this.repository.findOne({
+      where: { id },
+      relations: { author: true },
+    });
+
+    const path = file?.path?.split('/assets');
+    const avatar = path ? path[1] : findOne?.author?.avatar;
+
+    if (!findOne.author) {
+      const author = this.authorRepository.create({ avatar });
+      findOne.author = author;
+      await this.repository.manager.save([author, findOne]);
+      findOne = await this.repository.findOne({
+        where: { id },
+        relations: { author: true },
+      });
+    }
+    findOne.author.avatar = avatar;
+    await this.repository.manager.save([findOne, findOne.author]);
+    return { path: findOne.author.avatar, status: HttpStatus.OK };
+  }
+
   async updated(id: number, body: AuthorField, file: Express.Multer.File) {
     let author: AuthorEntity;
     let findOne = await this.repository.findOne({
@@ -96,8 +120,8 @@ export default class UserService {
       relations: { author: true },
     });
     const path = file?.path?.split('/assets');
-    const avatar = path ? path[1] : findOne.author.avatar;
-    if (!findOne.author) {
+    const avatar = path ? path[1] : findOne.author?.avatar || '';
+    if (!findOne?.author) {
       author = this.authorRepository.create({
         ...body,
         horoscope: Zodiac[body.horoscope],
@@ -111,6 +135,7 @@ export default class UserService {
         relations: { author: true },
       });
     }
+    findOne.author.gender = body.gender;
     findOne.author.nickname = body.nickname;
     findOne.author.birthday = body.birthday;
     findOne.author.height = body.height;
@@ -119,8 +144,11 @@ export default class UserService {
     findOne.author.interest = body.interest;
     findOne.author.zodiac = Zodiac[body.zodiac];
     findOne.author.horoscope = Zodiac[body.horoscope];
-    findOne.author.avatar = avatar;
-    await this.repository.manager.save(findOne);
+    console.log(avatar, file);
+    if (avatar) {
+      findOne.author.avatar = avatar;
+    }
+    await this.repository.manager.save([findOne, findOne.author]);
     return { message: 'Account has been updated', status: HttpStatus.OK };
   }
 }

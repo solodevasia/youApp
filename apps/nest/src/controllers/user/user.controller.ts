@@ -61,7 +61,7 @@ export default class UserController {
     return this.repository.findOne(id);
   }
 
-  @Put('/profile/updated')
+  @Post('/profile/updated')
   @HttpCode(HttpStatus.OK)
   @UseInterceptors(FileInterceptor('file', { storage: diskStorage }))
   @UseGuards(AuthGuard)
@@ -71,5 +71,17 @@ export default class UserController {
     @UploadedFile('file') file: Express.Multer.File,
   ) {
     return this.service.updated(req.user.id, body, file);
+  }
+
+  @Post('/upload/avatar')
+  @UseGuards(AuthGuard)
+  @HttpCode(HttpStatus.OK)
+  @UseInterceptors(FileInterceptor('file', { storage: diskStorage }))
+  uploadAvatar(
+    @Req() req: CustomRequest,
+    @UploadedFile('file') file: Express.Multer.File,
+  ) {
+    console.log(file, '<<<<>');
+    return this.service.uploadAvatar(req.user.id, file);
   }
 }

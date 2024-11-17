@@ -12,6 +12,9 @@ export default class AuthorEntity {
   @Column({ nullable: true })
   avatar: string;
 
+  @Column({nullable: true})
+  gender: string;
+
   @Column({ nullable: true })
   nickname: string;
 

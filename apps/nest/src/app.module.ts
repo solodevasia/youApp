@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
-import UserModule from './modules/user.module';
+import UserModule from '@youApp/modules/user.module';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { JwtModule } from '@nestjs/jwt';
 import fs from 'fs';
 import { join } from 'path';
 import { ServeStaticModule } from '@nestjs/serve-static';
+import PublicController from '@youApp/controllers/public/public.controller';
 
 export const typeormConfiguration = {
   type: process.env.type as any,
@@ -14,7 +15,7 @@ export const typeormConfiguration = {
   password: process.env.password,
   database: process.env.database,
   autoLoadEntities: true,
-  synchronize: false,
+  synchronize: true,
 } as TypeOrmModuleOptions;
 
 @Module({
@@ -31,7 +32,7 @@ export const typeormConfiguration = {
       serveRoot: '/assets',
     }),
   ],
-  controllers: [],
+  controllers: [PublicController],
   providers: [],
 })
 export class AppModule {}

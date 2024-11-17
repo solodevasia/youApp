@@ -2,6 +2,7 @@ import z from 'zod';
 
 export const authorField = z.object({
   nickname: z.string(),
+  gender: z.string(),
   birthday: z.string(),
   horoscope: z.string(),
   zodiac: z.string(),

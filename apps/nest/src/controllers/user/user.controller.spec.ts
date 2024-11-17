@@ -159,7 +159,7 @@ describe('UserController', () => {
       encoding: 'utf-8',
     });
     await supertest(app.getHttpServer())
-      .put('/user/profile/updated')
+      .post('/user/profile/updated')
       .set('Content-Type', 'application/json')
       .set('Authorization', `Bearer ${token}`)
       .field('nickname', faker.person.fullName())
@@ -183,7 +183,7 @@ describe('UserController', () => {
       },
     );
     await supertest(app.getHttpServer())
-      .put('/user/profile/updated')
+      .post('/user/profile/updated')
       .set('Content-Type', 'application/json')
       .set('Authorization', `Bearer ${token}`)
       .field('nickname', faker.person.fullName())

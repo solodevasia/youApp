@@ -8,7 +8,7 @@ import { useRouter } from "next/router";
 export default function Home() {
   const router = useRouter();
   const [state, setState] = React.useState({
-    username: "",
+    token: "",
     password: "",
   });
   const [visible, setVisible] = React.useState(false);
@@ -19,27 +19,38 @@ export default function Home() {
       ...prevState,
       [event.target.name]: event.target.value,
     }));
-    if (state.username.length > 1 && state.password.length > 1) {
+    if (state.token.length > 1 && state.password.length > 1) {
       setDisabled(() => false);
     } else setDisabled(() => true);
   }
 
   function onSubmit(event: React.MouseEvent<HTMLButtonElement>) {
     event.preventDefault();
-    if (state.username === "admin" && state.password === "admin") {
-      router.push("/profile");
-    }
+    fetch("/api/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(state),
+    }).then(async (res) => {
+      const data = await res.json();
+      if (data && typeof window !== "undefined") {
+        localStorage.setItem("token", data);
+        window.location.reload();
+      }
+    });
   }
+
   return (
     <div className="flex justify-center pt-32 bg-publish">
       <div>
         <div className="text-[#FFFFFF] text-[24px] font-bold mb-6">Login</div>
         <Input
           id="login-input__testid"
-          name="username"
+          name="token"
           type="text"
           classes="mb-4"
-          value={state.username}
+          value={state.token}
           onChange={onChange}
           placeholder="Enter Username/Email"
         />
@@ -66,7 +77,7 @@ export default function Home() {
           disabled={disabled}
           onClick={onSubmit}
         >
-          <span>Register</span>
+          <span>Login</span>
         </Button>
         <div className="flex items-center justify-center">
           <span className="mr-2 text-[#FFFFFF] text-[13px] font-[500]">

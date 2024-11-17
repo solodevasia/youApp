@@ -18,7 +18,7 @@ export default function Button({ children, ...props }: Props) {
       type={props.type}
       disabled={props.disabled}
       className={`w-[331px] h-[48px] rounded-[8px] relative overflow-hidden text-[#FFFFFF] ${props.color} ${props.classes} ${className}`}
-      onClick={props.onClick}
+      onClick={props.disabled ? () => {} : props.onClick}
     >
       {props.disabled ? (
         <div className="absolute top-0 left-0 w-[100%] h-[100%]"></div>

@@ -11,25 +11,61 @@ export default function Register() {
     username: "",
     email: "",
     password: "",
-    confirm_password: "",
+    confirmation: "",
   });
   const [visible, setVisible] = React.useState(true);
   const [disabled, setDisabled] = React.useState(true);
+  const [invalidEmail, setInvalidEmail] = React.useState(false);
+  const [invalidPassword, setInvalidPassword] = React.useState(false);
 
   function onChange(event: React.ChangeEvent<HTMLInputElement>) {
     setState((prevState) => ({
       ...prevState,
       [event.target.name]: event.target.value,
     }));
+  }
+
+  function onSubmit(event: React.MouseEvent<HTMLButtonElement>) {
+    event.preventDefault();
+    fetch("/api/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(state),
+    }).then(async (res) => {
+      if (res) {
+        router.push("/");
+      }
+    });
+  }
+
+  React.useEffect(() => {
     if (
       state.username.length > 1 &&
       state.email.length > 1 &&
       state.password.length > 1 &&
-      state.confirm_password.length > 1
+      state.confirmation.length > 1
     ) {
-      setDisabled(() => false);
+      if (state.password === state.confirmation) {
+        setDisabled(() => false);
+      }
     } else setDisabled(() => true);
-  }
+
+    if (state.password && state.confirmation) {
+      if (state.password === state.confirmation) {
+        setInvalidPassword(() => false);
+      } else setInvalidPassword(() => true);
+    }
+
+    if (state.email) {
+      if (
+        /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(state.email)
+      ) {
+        setInvalidEmail(() => false);
+      } else setInvalidEmail(() => true);
+    }
+  }, [state]);
   return (
     <div className="flex justify-center pt-32 bg-publish">
       <div>
@@ -40,14 +76,19 @@ export default function Register() {
           id="email-input__testid"
           name="email"
           type="email"
-          classes="mb-6"
+          classes={invalidEmail ? "" : "mb-6"}
           placeholder="Enter Email"
           value={state.email}
           onChange={onChange}
         />
+        {invalidEmail ? (
+          <div className="text-xs text-red-500 text-medium mb-4 mt-1 ml-1">
+            Invalid Email address
+          </div>
+        ) : null}
         <Input
           id="username-input__testid"
-          name="email"
+          name="username"
           type="text"
           classes="mb-6"
           placeholder="Create Username"
@@ -70,12 +111,12 @@ export default function Register() {
           />
         </Input>
         <Input
-          id="confirm-password-input__testid"
-          name="confirm_password"
+          id="confirmation-input__testid"
+          name="confirmation"
           type="password"
-          classes="mb-8"
+          classes={invalidPassword ? "" : "mb-8"}
           placeholder="Confirm Password"
-          value={state.confirm_password}
+          value={state.confirmation}
           onChange={onChange}
         >
           <Image
@@ -84,12 +125,18 @@ export default function Register() {
             onClick={() => setVisible(() => !visible)}
           />
         </Input>
+        {invalidPassword ? (
+          <div className="text-xs text-red-500 text-medium mb-8 mt-1 ml-1">
+            Password don't match, please check again
+          </div>
+        ) : null}
         <Button
           id="button-login__testid"
           type="button"
           color="primary"
           classes="mb-10"
           disabled={disabled}
+          onClick={onSubmit}
         >
           <span>Register</span>
         </Button>

@@ -75,3 +75,20 @@
     #d5be88 100.43%
   );
 }
+
+.youAppUpload::-webkit-file-upload-button {
+  background-color: transparent;
+  color: transparent;
+  border: none;
+}
+
+.youAppDate::-webkit-datetime-edit {
+  background-color: transparent;
+  color: transparent;
+  border: none;
+}
+
+.youAppDate::-webkit-calendar-picker-indicator {
+  width: 100%;
+  height: 100%;
+}
