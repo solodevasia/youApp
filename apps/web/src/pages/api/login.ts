@@ -15,7 +15,6 @@ export default async function handler(
   }).then(async (resp) => await resp.json());
 
   if (data?.accessToken) {
-    console.log(data.accessToken);
     const cookie = serialize("token", data.accessToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
@@ -24,5 +23,5 @@ export default async function handler(
     });
     res.setHeader("Set-Cookie", cookie);
     res.status(200).json(data.accessToken);
-  }
+  } else res.status(400).json(data);
 }

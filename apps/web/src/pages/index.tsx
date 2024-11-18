@@ -13,6 +13,7 @@ export default function Home() {
   });
   const [visible, setVisible] = React.useState(false);
   const [disabled, setDisabled] = React.useState(true);
+  const [error, setError] = React.useState<{ message: string } | null>();
 
   function onChange(event: React.ChangeEvent<HTMLInputElement>) {
     setState((prevState) => ({
@@ -26,6 +27,7 @@ export default function Home() {
 
   function onSubmit(event: React.MouseEvent<HTMLButtonElement>) {
     event.preventDefault();
+    setError(() => null);
     fetch("/api/login", {
       method: "POST",
       headers: {
@@ -34,15 +36,22 @@ export default function Home() {
       body: JSON.stringify(state),
     }).then(async (res) => {
       const data = await res.json();
-      if (data && typeof window !== "undefined") {
+      if (data && typeof window !== "undefined" && !data?.status) {
         localStorage.setItem("token", data);
         window.location.reload();
+      } else {
+        setError(() => data);
       }
     });
   }
 
   return (
-    <div className="flex justify-center pt-32 bg-publish">
+    <div className="flex justify-center pt-32 bg-publish relative">
+      {error ? (
+        <div className="fixed top-0 left-0 bg-red-500 p-2 w-full text-white text-[14px]">
+          {error?.message}
+        </div>
+      ) : null}
       <div>
         <div className="text-[#FFFFFF] text-[24px] font-bold mb-6">Login</div>
         <Input
