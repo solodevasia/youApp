@@ -148,7 +148,7 @@ export default function Profile() {
                 : state.avatar
             }
             alt="background"
-            className="absolute top-0 left-0 w-full h-full"
+            className="absolute top-0 left-0 bg-cover bg-center w-full h-full"
           />
         ) : null}
         <div className="absolute top-3 right-4">
