@@ -29,21 +29,32 @@ export default function Profile() {
     weight: "",
     interest: "",
   });
+  const [data, setData] = React.useState({
+    avatar: "",
+    nickname: "",
+    gender: "",
+    birthday: "",
+    horoscope: "",
+    zodiac: "",
+    height: "",
+    weight: "",
+    interest: "",
+  });
   const [zodiacData, setZodiac] = React.useState([]);
   const [aboutEdit, setAboutEdit] = React.useState(false);
+  const [updated, setUpdated] = React.useState(false);
 
   function onAboutUpdated() {
     const body = new FormData();
 
     if (aboutEdit) {
-      console.log(state.avatar);
       body.append("file", files?.[0]);
       body.append("nickname", state.nickname);
       body.append("birthday", state.birthday);
       body.append("height", state.height?.split(" ")[0]);
       body.append("weight", state.weight?.split(" ")[0]);
-      body.append("horoscope", zodiacData[Number(state.horoscope)] || null);
-      body.append("zodiac", zodiacData[Number(state.zodiac)] || null);
+      body.append("horoscope", state.horoscope);
+      body.append("zodiac", state.zodiac);
       body.append("gender", state.gender);
       fetch("/api/v1/user/profile/updated", {
         method: "POST",
@@ -51,12 +62,12 @@ export default function Profile() {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
         body,
-      }).then(async (res) => {
-        const data = await res.json();
-        console.log(data);
+      }).then(() => {
+        setUpdated(() => true);
       });
     }
     setAboutEdit(() => !aboutEdit);
+    setUpdated(() => false);
   }
 
   async function uploadAvatar(event: React.ChangeEvent<HTMLInputElement>) {
@@ -102,7 +113,9 @@ export default function Profile() {
   React.useEffect(() => {
     fetch("/api/v1/public/zodiac").then(async (res) => {
       const data = await res.json();
-      setZodiac(() => data);
+      if (!zodiacData.length) {
+        setZodiac(() => data);
+      }
     });
 
     fetch("/api/v1/user/profile", {
@@ -111,15 +124,38 @@ export default function Profile() {
       },
     }).then(async (res) => {
       const data = await res.json();
+      setData((prevState) => ({
+        ...prevState,
+        ...data.author,
+        height: data.author?.height ? `${data.author.height} cm` : "",
+        weight: data.author?.weight ? `${data.author.weight} kg` : "",
+        avatar: data.author?.avatar,
+        horoscope:
+          typeof data.author?.horoscope === "number"
+            ? zodiacData[data.author.horoscope]
+            : "",
+        zodiac:
+          typeof data.author?.zodiac === "number"
+            ? zodiacData[data.author.zodiac]
+            : "",
+      }));
       setState((prevState) => ({
         ...prevState,
         ...data.author,
         height: data.author?.height ? `${data.author.height} cm` : "",
         weight: data.author?.weight ? `${data.author.weight} kg` : "",
         avatar: data.author?.avatar,
+        horoscope:
+          typeof data.author?.horoscope === "number"
+            ? zodiacData[data.author.horoscope]
+            : "",
+        zodiac:
+          typeof data.author?.zodiac === "number"
+            ? zodiacData[data.author.zodiac]
+            : "",
       }));
     });
-  }, []);
+  }, [zodiacData, updated]);
 
   return (
     <div className="pt-16 px-5 bg-internal overflow-scroll pb-10">
@@ -132,20 +168,18 @@ export default function Profile() {
           />
           <span className="text-[14px] font-bold text-white ml-2">Back</span>
         </div>
-        {state.nickname ? (
-          <span className="text-[14px] font-semibold text-white">
-            {state.nickname ? `@${state.nickname}` : null}
-          </span>
-        ) : null}
+        <span className="text-[14px] font-semibold text-white">
+          {data.nickname ? `@${data.nickname}` : "Welcome"}
+        </span>
         <Image src={elipsis} alt="elipsis" />
       </div>
       <div className="w-full h-[190px] relative bg-background mt-6 rounded-[16px] flex items-start justify-end flex-col p-4 overflow-hidden">
-        {state.avatar ? (
+        {data.avatar ? (
           <img
             src={
-              state.avatar?.indexOf("avatar") > -1
-                ? `/assets${state.avatar}`
-                : state.avatar
+              data.avatar?.indexOf("avatar") > -1
+                ? `/assets${data.avatar}`
+                : data.avatar
             }
             alt="background"
             className="absolute top-0 left-0 bg-cover bg-center w-full h-full"
@@ -161,29 +195,22 @@ export default function Profile() {
         </div>
         <div className="absolute bottom-4 left-4">
           <div className="text-[16px] text-white font-bold">
-            {state.nickname ? `@${state.nickname}` : null},
-            {state.birthday
-              ? moment(new Date()).locale("id").diff(state.birthday, "year")
+            @{data.nickname || "Welcome"}
+            {data.birthday
+              ? `, ${moment(new Date()).locale("id").diff(data.birthday, "year")}`
               : null}
           </div>
-          {state.gender ? (
+          {data.gender ? (
             <div className="text-[13px] font-medium text-white my-1">
-              {state.gender}
+              {data.gender}
             </div>
           ) : null}
           <div className="flex items-center">
-            {typeof state.horoscope === "number" ? (
-              <Chip
-                image={horoscope}
-                text={zodiacData[Number(state.horoscope)]}
-              />
+            {data.horoscope ? (
+              <Chip image={horoscope} text={data.horoscope} />
             ) : null}
-            {typeof state.zodiac === "number" ? (
-              <Chip
-                image={zodiac}
-                text={zodiacData[Number(state.zodiac)]}
-                classes="ml-2"
-              />
+            {data.zodiac ? (
+              <Chip image={zodiac} text={data.zodiac} classes="ml-2" />
             ) : null}
           </div>
         </div>
@@ -298,57 +325,57 @@ export default function Profile() {
           </div>
         ) : (
           <div className="py-4 w-[280px]">
-            {Object.keys(state).filter(
-              (key) => (state as unknown as { [key: string]: string })[key]
+            {Object.keys(data).filter(
+              (key) => (data as unknown as { [key: string]: string })[key]
             )[0] ? (
               <div>
-                {state.birthday ? (
+                {data.birthday ? (
                   <div className="mb-1">
                     <span className="text-label text-[13px] font-medium">
                       Birthday:
                     </span>
                     <span className="text-[13px] text-white font-medium ml-2">
-                      {`${state.birthday.split("-").reverse().join(" / ")} (Age ${moment(new Date()).locale("id").diff(state.birthday, "year")})`}
+                      {`${data.birthday.split("-").reverse().join(" / ")} (Age ${moment(new Date()).locale("id").diff(data.birthday, "year")})`}
                     </span>
                   </div>
                 ) : null}
-                {typeof state.horoscope === "number" ? (
+                {data.horoscope ? (
                   <div className="mb-1">
                     <span className="text-label text-[13px] font-medium">
                       Horoscope:
                     </span>
                     <span className="text-[13px] text-white font-medium ml-2">
-                      {zodiacData[Number(state.horoscope)]}
+                      {data.horoscope}
                     </span>
                   </div>
                 ) : null}
-                {typeof state.zodiac === "number" ? (
+                {data.zodiac ? (
                   <div className="mb-1">
                     <span className="text-label text-[13px] font-medium">
                       Zodiac:
                     </span>
                     <span className="text-[13px] text-white font-medium ml-2">
-                      {zodiacData[Number(state.zodiac)]}
+                      {data.zodiac}
                     </span>
                   </div>
                 ) : null}
-                {state.height ? (
+                {data.height ? (
                   <div className="mb-1">
                     <span className="text-label text-[13px] font-medium">
                       Height:
                     </span>
                     <span className="text-[13px] text-white font-medium ml-2">
-                      {state.height}
+                      {data.height}
                     </span>
                   </div>
                 ) : null}
-                {state.weight ? (
+                {data.weight ? (
                   <div className="mb-1">
                     <span className="text-label text-[13px] font-medium">
                       Weight:
                     </span>
                     <span className="text-[13px] text-white font-medium ml-2">
-                      {state.weight}
+                      {data.weight}
                     </span>
                   </div>
                 ) : null}

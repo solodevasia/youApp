@@ -134,16 +134,15 @@ export default class UserService {
         relations: { author: true },
       });
     }
-    findOne.author.gender = body.gender || findOne.author.gender;
-    findOne.author.nickname = body.nickname || findOne.author.nickname;
-    findOne.author.birthday = body.birthday || findOne.author.birthday;
-    findOne.author.height = body.height || findOne.author.height;
-    findOne.author.weight = body.weight || findOne.author.weight;
-    findOne.author.about = body.about || findOne.author.about;
-    findOne.author.interest = body.interest || findOne.author.interest;
-    findOne.author.zodiac = Zodiac[body.zodiac] || findOne.author.zodiac;
-    findOne.author.horoscope =
-      Zodiac[body.horoscope] || findOne.author.horoscope;
+    findOne.author.gender = body.gender || '';
+    findOne.author.nickname = body.nickname || '';
+    findOne.author.birthday = body.birthday || '';
+    findOne.author.height = body.height || null;
+    findOne.author.weight = body.weight || null;
+    findOne.author.about = body.about || '';
+    findOne.author.interest = body.interest || '';
+    findOne.author.zodiac = Zodiac[body.zodiac] ?? null;
+    findOne.author.horoscope = Zodiac[body.horoscope] ?? null;
     if (avatar) {
       findOne.author.avatar = avatar;
     }

@@ -1,1 +1,1 @@
-{"id":70,"username":"Georgianna_Batz15","email":"Kraig57@hotmail.com","password":"$2b$10$jQanODyHcPq6sjuclmzoSeTmRJr1jFpPzz3eDT.5P4oP4eM8x5gZm","created_at":1731877286089,"updated_at":1731877286089}
+{"id":82,"username":"Kenneth_Schmeler-Hilll55","email":"Maureen.Durgan83@gmail.com","password":"$2b$10$ksvJH3zZqn.1tosdm6xPQe/EgApupQt8rmBBU/.41KUGoA2uE4M8C","created_at":1731893009495,"updated_at":1731893009495}
